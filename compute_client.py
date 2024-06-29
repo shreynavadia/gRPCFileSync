@@ -6,36 +6,44 @@ def run():
     with grpc.insecure_channel('localhost:50051') as channel:
         stub = compute_pb2_grpc.ComputationStub(channel)
         while True:
-            print("Select operation: add, sort, exit")
-            operation = input("Enter operation: ")
-            if operation == 'exit':
+            print("\nSelect operation:")
+            print("1. Add")
+            print("2. Sort")
+            print("3. Exit")
+            operation = input("Enter option (1/2/3): ")
+
+            if operation == '3':
                 break
-            elif operation == 'add':
+            elif operation == '1':
                 i = int(input("Enter first number: "))
                 j = int(input("Enter second number: "))
-                print("Select mode: sync, async")
-                mode = input("Enter mode: ")
-                if mode == 'sync':
+                print("Select mode:")
+                print("1. Synchronous")
+                print("2. Asynchronous")
+                mode = input("Enter mode (1/2): ")
+                if mode == '1':
                     response = stub.Add(compute_pb2.AddRequest(i=i, j=j))
                     print(f"Result: {response.result}")
-                elif mode == 'async':
+                elif mode == '2':
                     response = stub.AsyncAdd(compute_pb2.AddRequest(i=i, j=j))
-                    print(f"Acknowledged with task ID: {response.task_id}")
+                    print(f"Acknowledgement with task ID: {response.task_id}")
                     while True:
                         result_response = stub.GetResult(compute_pb2.ResultRequest(task_id=response.task_id))
                         if result_response.HasField('add_result'):
                             print(f"Async Result: {result_response.add_result}")
                             break
-            elif operation == 'sort':
+            elif operation == '2':
                 array = list(map(int, input("Enter array elements separated by space: ").split()))
-                print("Select mode: sync, async")
-                mode = input("Enter mode: ")
-                if mode == 'sync':
+                print("Select mode:")
+                print("1. Synchronous")
+                print("2. Asynchronous")
+                mode = input("Enter mode (1/2): ")
+                if mode == '1':
                     response = stub.Sort(compute_pb2.SortRequest(array=array))
                     print(f"Sorted array: {response.sorted_array}")
-                elif mode == 'async':
+                elif mode == '2':
                     response = stub.AsyncSort(compute_pb2.SortRequest(array=array))
-                    print(f"Acknowledged with task ID: {response.task_id}")
+                    print(f"Acknowledgement with task ID: {response.task_id}")
                     while True:
                         result_response = stub.GetResult(compute_pb2.ResultRequest(task_id=response.task_id))
                         if result_response.HasField('sort_response'):
