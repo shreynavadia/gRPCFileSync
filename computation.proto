@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package computation;
+
+service Computation {
+  rpc Addition (AdditionRequest) returns (AdditionResponse);
+  rpc Sorting (SortingRequest) returns (SortingResponse);
+  rpc AsyncAddition (AdditionRequest) returns (AsyncTaskResponse);
+  rpc AsyncSorting (SortingRequest) returns (AsyncTaskResponse);
+  rpc RetrieveResult (ResultQuery) returns (ResultQueryResponse);
+}
+
+message AdditionRequest {
+  int32 num1 = 1;
+  int32 num2 = 2;
+}
+
+message AdditionResponse {
+  int32 sum = 1;
+}
+
+message SortingRequest {
+  repeated int32 numbers = 1;
+}
+
+message SortingResponse {
+  repeated int32 sorted_numbers = 1;
+}
+
+message AsyncTaskResponse {
+  string status = 1;
+  int32 task_id = 2;
+}
+
+message ResultQuery {
+  int32 task_id = 1;
+}
+
+message ResultQueryResponse {
+  oneof result {
+    int32 addition_result = 1;
+    SortingResponse sorting_result = 2;
+  }
+}

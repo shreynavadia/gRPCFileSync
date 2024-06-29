@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import compute_pb2 as compute__pb2
+import computation_pb2 as computation__pb2
 
 GRPC_GENERATED_VERSION = '1.64.1'
 GRPC_VERSION = grpc.__version__
@@ -20,7 +20,7 @@ except ImportError:
 if _version_not_supported:
     warnings.warn(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in compute_pb2_grpc.py depends on'
+        + f' but the generated code in computation_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -39,61 +39,61 @@ class ComputationStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.Add = channel.unary_unary(
-                '/computation.Computation/Add',
-                request_serializer=compute__pb2.AddRequest.SerializeToString,
-                response_deserializer=compute__pb2.AddResponse.FromString,
+        self.Addition = channel.unary_unary(
+                '/computation.Computation/Addition',
+                request_serializer=computation__pb2.AdditionRequest.SerializeToString,
+                response_deserializer=computation__pb2.AdditionResponse.FromString,
                 _registered_method=True)
-        self.Sort = channel.unary_unary(
-                '/computation.Computation/Sort',
-                request_serializer=compute__pb2.SortRequest.SerializeToString,
-                response_deserializer=compute__pb2.SortResponse.FromString,
+        self.Sorting = channel.unary_unary(
+                '/computation.Computation/Sorting',
+                request_serializer=computation__pb2.SortingRequest.SerializeToString,
+                response_deserializer=computation__pb2.SortingResponse.FromString,
                 _registered_method=True)
-        self.AsyncAdd = channel.unary_unary(
-                '/computation.Computation/AsyncAdd',
-                request_serializer=compute__pb2.AddRequest.SerializeToString,
-                response_deserializer=compute__pb2.AsyncResponse.FromString,
+        self.AsyncAddition = channel.unary_unary(
+                '/computation.Computation/AsyncAddition',
+                request_serializer=computation__pb2.AdditionRequest.SerializeToString,
+                response_deserializer=computation__pb2.AsyncTaskResponse.FromString,
                 _registered_method=True)
-        self.AsyncSort = channel.unary_unary(
-                '/computation.Computation/AsyncSort',
-                request_serializer=compute__pb2.SortRequest.SerializeToString,
-                response_deserializer=compute__pb2.AsyncResponse.FromString,
+        self.AsyncSorting = channel.unary_unary(
+                '/computation.Computation/AsyncSorting',
+                request_serializer=computation__pb2.SortingRequest.SerializeToString,
+                response_deserializer=computation__pb2.AsyncTaskResponse.FromString,
                 _registered_method=True)
-        self.GetResult = channel.unary_unary(
-                '/computation.Computation/GetResult',
-                request_serializer=compute__pb2.ResultRequest.SerializeToString,
-                response_deserializer=compute__pb2.ResultResponse.FromString,
+        self.RetrieveResult = channel.unary_unary(
+                '/computation.Computation/RetrieveResult',
+                request_serializer=computation__pb2.ResultQuery.SerializeToString,
+                response_deserializer=computation__pb2.ResultQueryResponse.FromString,
                 _registered_method=True)
 
 
 class ComputationServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def Add(self, request, context):
+    def Addition(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def Sort(self, request, context):
+    def Sorting(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def AsyncAdd(self, request, context):
+    def AsyncAddition(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def AsyncSort(self, request, context):
+    def AsyncSorting(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetResult(self, request, context):
+    def RetrieveResult(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -102,30 +102,30 @@ class ComputationServicer(object):
 
 def add_ComputationServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'Add': grpc.unary_unary_rpc_method_handler(
-                    servicer.Add,
-                    request_deserializer=compute__pb2.AddRequest.FromString,
-                    response_serializer=compute__pb2.AddResponse.SerializeToString,
+            'Addition': grpc.unary_unary_rpc_method_handler(
+                    servicer.Addition,
+                    request_deserializer=computation__pb2.AdditionRequest.FromString,
+                    response_serializer=computation__pb2.AdditionResponse.SerializeToString,
             ),
-            'Sort': grpc.unary_unary_rpc_method_handler(
-                    servicer.Sort,
-                    request_deserializer=compute__pb2.SortRequest.FromString,
-                    response_serializer=compute__pb2.SortResponse.SerializeToString,
+            'Sorting': grpc.unary_unary_rpc_method_handler(
+                    servicer.Sorting,
+                    request_deserializer=computation__pb2.SortingRequest.FromString,
+                    response_serializer=computation__pb2.SortingResponse.SerializeToString,
             ),
-            'AsyncAdd': grpc.unary_unary_rpc_method_handler(
-                    servicer.AsyncAdd,
-                    request_deserializer=compute__pb2.AddRequest.FromString,
-                    response_serializer=compute__pb2.AsyncResponse.SerializeToString,
+            'AsyncAddition': grpc.unary_unary_rpc_method_handler(
+                    servicer.AsyncAddition,
+                    request_deserializer=computation__pb2.AdditionRequest.FromString,
+                    response_serializer=computation__pb2.AsyncTaskResponse.SerializeToString,
             ),
-            'AsyncSort': grpc.unary_unary_rpc_method_handler(
-                    servicer.AsyncSort,
-                    request_deserializer=compute__pb2.SortRequest.FromString,
-                    response_serializer=compute__pb2.AsyncResponse.SerializeToString,
+            'AsyncSorting': grpc.unary_unary_rpc_method_handler(
+                    servicer.AsyncSorting,
+                    request_deserializer=computation__pb2.SortingRequest.FromString,
+                    response_serializer=computation__pb2.AsyncTaskResponse.SerializeToString,
             ),
-            'GetResult': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetResult,
-                    request_deserializer=compute__pb2.ResultRequest.FromString,
-                    response_serializer=compute__pb2.ResultResponse.SerializeToString,
+            'RetrieveResult': grpc.unary_unary_rpc_method_handler(
+                    servicer.RetrieveResult,
+                    request_deserializer=computation__pb2.ResultQuery.FromString,
+                    response_serializer=computation__pb2.ResultQueryResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -139,7 +139,7 @@ class Computation(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def Add(request,
+    def Addition(request,
             target,
             options=(),
             channel_credentials=None,
@@ -152,9 +152,9 @@ class Computation(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/computation.Computation/Add',
-            compute__pb2.AddRequest.SerializeToString,
-            compute__pb2.AddResponse.FromString,
+            '/computation.Computation/Addition',
+            computation__pb2.AdditionRequest.SerializeToString,
+            computation__pb2.AdditionResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -166,7 +166,7 @@ class Computation(object):
             _registered_method=True)
 
     @staticmethod
-    def Sort(request,
+    def Sorting(request,
             target,
             options=(),
             channel_credentials=None,
@@ -179,9 +179,9 @@ class Computation(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/computation.Computation/Sort',
-            compute__pb2.SortRequest.SerializeToString,
-            compute__pb2.SortResponse.FromString,
+            '/computation.Computation/Sorting',
+            computation__pb2.SortingRequest.SerializeToString,
+            computation__pb2.SortingResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -193,7 +193,7 @@ class Computation(object):
             _registered_method=True)
 
     @staticmethod
-    def AsyncAdd(request,
+    def AsyncAddition(request,
             target,
             options=(),
             channel_credentials=None,
@@ -206,9 +206,9 @@ class Computation(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/computation.Computation/AsyncAdd',
-            compute__pb2.AddRequest.SerializeToString,
-            compute__pb2.AsyncResponse.FromString,
+            '/computation.Computation/AsyncAddition',
+            computation__pb2.AdditionRequest.SerializeToString,
+            computation__pb2.AsyncTaskResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -220,7 +220,7 @@ class Computation(object):
             _registered_method=True)
 
     @staticmethod
-    def AsyncSort(request,
+    def AsyncSorting(request,
             target,
             options=(),
             channel_credentials=None,
@@ -233,9 +233,9 @@ class Computation(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/computation.Computation/AsyncSort',
-            compute__pb2.SortRequest.SerializeToString,
-            compute__pb2.AsyncResponse.FromString,
+            '/computation.Computation/AsyncSorting',
+            computation__pb2.SortingRequest.SerializeToString,
+            computation__pb2.AsyncTaskResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -247,7 +247,7 @@ class Computation(object):
             _registered_method=True)
 
     @staticmethod
-    def GetResult(request,
+    def RetrieveResult(request,
             target,
             options=(),
             channel_credentials=None,
@@ -260,9 +260,9 @@ class Computation(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/computation.Computation/GetResult',
-            compute__pb2.ResultRequest.SerializeToString,
-            compute__pb2.ResultResponse.FromString,
+            '/computation.Computation/RetrieveResult',
+            computation__pb2.ResultQuery.SerializeToString,
+            computation__pb2.ResultQueryResponse.FromString,
             options,
             channel_credentials,
             insecure,

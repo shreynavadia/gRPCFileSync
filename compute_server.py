@@ -1,59 +1,61 @@
 import grpc
 from concurrent import futures
 import time
-import compute_pb2
-import compute_pb2_grpc
+import computation_pb2
+import computation_pb2_grpc
 import threading
 
-class ComputationServicer(compute_pb2_grpc.ComputationServicer):
+class ComputationService(computation_pb2_grpc.ComputationServicer):
     def __init__(self):
-        self.results = {}
+        self.task_results = {}
         self.lock = threading.Lock()
-        self.task_id = 0
+        self.current_task_id = 0
 
-    def Add(self, request, context):
-        result = request.i + request.j
-        return compute_pb2.AddResponse(result=result)
+    def Addition(self, request, context):
+        sum_result = request.num1 + request.num2
+        return computation_pb2.AdditionResponse(sum=sum_result)
 
-    def Sort(self, request, context):
-        sorted_array = sorted(request.array)
-        return compute_pb2.SortResponse(sorted_array=sorted_array)
-
-    def AsyncAdd(self, request, context):
-        self.task_id += 1
-        task_id = self.task_id
-        threading.Thread(target=self._async_add, args=(request.i, request.j, task_id)).start()
-        return compute_pb2.AsyncResponse(message="Acknowledged", task_id=task_id)
-
-    def _async_add(self, i, j, task_id):
-        result = i + j
+    def AsyncAddition(self, request, context):
         with self.lock:
-            self.results[task_id] = compute_pb2.ResultResponse(add_result=result)
+            self.current_task_id += 1
+            task_id = self.current_task_id
+        threading.Thread(target=self._perform_async_addition, args=(request.num1, request.num2, task_id)).start()
+        return computation_pb2.AsyncTaskResponse(status="Task started", task_id=task_id)
 
-    def AsyncSort(self, request, context):
-        self.task_id += 1
-        task_id = self.task_id
-        threading.Thread(target=self._async_sort, args=(request.array, task_id)).start()
-        return compute_pb2.AsyncResponse(message="Acknowledged", task_id=task_id)
+    def Sorting(self, request, context):
+        sorted_numbers = sorted(request.numbers)
+        return computation_pb2.SortingResponse(sorted_numbers=sorted_numbers)
 
-    def _async_sort(self, array, task_id):
-        sorted_array = sorted(array)
+    def RetrieveResult(self, request, context):
         with self.lock:
-            self.results[task_id] = compute_pb2.ResultResponse(sort_response=compute_pb2.SortResponse(sorted_array=sorted_array))
-
-    def GetResult(self, request, context):
-        with self.lock:
-            result = self.results.get(request.task_id, None)
+            result = self.task_results.get(request.task_id, None)
         if result:
             return result
         else:
-            context.set_details('Result not ready')
+            context.set_details('Result not available')
             context.set_code(grpc.StatusCode.NOT_FOUND)
-            return compute_pb2.ResultResponse()
+            return computation_pb2.ResultQueryResponse()
+
+    def AsyncSorting(self, request, context):
+        with self.lock:
+            self.current_task_id += 1
+            task_id = self.current_task_id
+        threading.Thread(target=self._perform_async_sorting, args=(request.numbers, task_id)).start()
+        return computation_pb2.AsyncTaskResponse(status="Task started", task_id=task_id)
+
+    def _perform_async_addition(self, num1, num2, task_id):
+        result = num1 + num2
+        with self.lock:
+            self.task_results[task_id] = computation_pb2.ResultQueryResponse(addition_result=result)
+
+    def _perform_async_sorting(self, numbers, task_id):
+        sorted_numbers = sorted(numbers)
+        with self.lock:
+            self.task_results[task_id] = computation_pb2.ResultQueryResponse(sorting_result=computation_pb2.SortingResponse(sorted_numbers=sorted_numbers))
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    compute_pb2_grpc.add_ComputationServicer_to_server(ComputationServicer(), server)
+    computation_pb2_grpc.add_ComputationServicer_to_server(ComputationService(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
     try:
